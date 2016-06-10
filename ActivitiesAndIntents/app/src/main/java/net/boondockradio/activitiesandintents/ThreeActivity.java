@@ -24,7 +24,7 @@ public class ThreeActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         String message = intent.getStringExtra(KEY_MESSAGE);
-        TextView text = (TextView) findViewById(R.id.text);
+        TextView text = (TextView) findViewById(R.id.txt_activity_three);
 
         text.setText(message);
     }

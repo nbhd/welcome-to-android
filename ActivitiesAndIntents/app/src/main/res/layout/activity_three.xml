@@ -10,7 +10,7 @@
     tools:context="net.boondockradio.activitiesandintents.ThreeActivity">
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/txt_activity_three"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

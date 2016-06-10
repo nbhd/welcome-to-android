@@ -15,32 +15,32 @@
         android:text="@string/app_name"/>
     
     <Button
-        android:id="@+id/activity1"
+        android:id="@+id/btn_activity1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
         android:text="@string/label_activity1"/>
     <Button
-        android:id="@+id/activity2"
+        android:id="@+id/btn_activity2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_below="@+id/activity1"
+        android:layout_below="@+id/btn_activity1"
         android:text="@string/label_activity2"/>
     <Button
-        android:id="@+id/activity3"
+        android:id="@+id/btn_activity3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_below="@+id/activity2"
+        android:layout_below="@+id/btn_activity2"
         android:text="@string/label_activity3"/>
     <Button
-        android:id="@+id/activity4"
+        android:id="@+id/btn_activity4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_below="@+id/activity3"
+        android:layout_below="@+id/btn_activity3"
         android:text="@string/label_activity4"/>
 
 </RelativeLayout>

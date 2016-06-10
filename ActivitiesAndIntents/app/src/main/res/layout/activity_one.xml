@@ -10,7 +10,7 @@
     tools:context="net.boondockradio.activitiesandintents.OneActivity">
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/txt_activity_one"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
