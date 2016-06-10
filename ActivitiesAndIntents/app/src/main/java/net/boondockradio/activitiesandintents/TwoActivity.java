@@ -11,7 +11,7 @@ public class TwoActivity extends AppCompatActivity {
     private static final String KEY_MESSAGE = "message";
 
     public static void startActivity(Context context) {
-        Intent intent = new Intent(context, OneActivity.class);
+        Intent intent = new Intent(context, TwoActivity.class);
         intent.putExtra(KEY_MESSAGE, "on moved 2");
         context.startActivity(intent);
     }

@@ -11,7 +11,7 @@ public class ThreeActivity extends AppCompatActivity {
     private static final String KEY_MESSAGE = "message";
 
     public static void startActivity(Context context) {
-        Intent intent = new Intent(context, OneActivity.class);
+        Intent intent = new Intent(context, ThreeActivity.class);
         intent.putExtra(KEY_MESSAGE, "on moved 3");
         context.startActivity(intent);
     }
