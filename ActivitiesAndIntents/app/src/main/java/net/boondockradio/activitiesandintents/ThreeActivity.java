@@ -8,9 +8,11 @@ import android.widget.TextView;
 
 public class ThreeActivity extends AppCompatActivity {
 
+    private static final String KEY_MESSAGE = "message";
+
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, OneActivity.class);
-        intent.putExtra("message", "on moved 3");
+        intent.putExtra(KEY_MESSAGE, "on moved 3");
         context.startActivity(intent);
     }
 
@@ -21,7 +23,7 @@ public class ThreeActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        String message = intent.getStringExtra("message");
+        String message = intent.getStringExtra(KEY_MESSAGE);
         TextView text = (TextView) findViewById(R.id.text);
 
         text.setText(message);
