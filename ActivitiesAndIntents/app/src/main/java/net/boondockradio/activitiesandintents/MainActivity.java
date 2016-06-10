@@ -19,9 +19,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttons[3] = (Button) findViewById(R.id.activity4);
 
         for (Button b: buttons) {
-            if (b == null) {
-                continue;
-            }
             b.setOnClickListener(this);
         }
     }

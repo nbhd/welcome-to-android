@@ -2,8 +2,8 @@ package net.boondockradio.activitiesandintents;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 public class TwoActivity extends AppCompatActivity {
@@ -21,13 +21,9 @@ public class TwoActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        if (intent != null) {
-            String message = intent.getStringExtra("message");
-            TextView text = (TextView) findViewById(R.id.text);
+        String message = intent.getStringExtra("message");
+        TextView text = (TextView) findViewById(R.id.text);
 
-            if (text != null) {
-                text.setText(message);
-            }
-        }
+        text.setText(message);
     }
 }

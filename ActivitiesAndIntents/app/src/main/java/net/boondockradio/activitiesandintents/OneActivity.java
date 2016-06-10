@@ -21,13 +21,9 @@ public class OneActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
 
-        if (intent != null) {
-            String message = intent.getStringExtra("message");
-            TextView text = (TextView) findViewById(R.id.text);
+        String message = intent.getStringExtra("message");
+        TextView text = (TextView) findViewById(R.id.text);
 
-            if (text != null) {
-                text.setText(message);
-            }
-        }
+        text.setText(message);
     }
 }
