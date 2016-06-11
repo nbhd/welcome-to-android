@@ -2,8 +2,11 @@ package net.boondockradio.activitiesandintents;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -12,34 +15,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button buttons[] = new Button[4];
-        buttons[0] = (Button) findViewById(R.id.btn_activity1);
-        buttons[1] = (Button) findViewById(R.id.btn_activity2);
-        buttons[2] = (Button) findViewById(R.id.btn_activity3);
-        buttons[3] = (Button) findViewById(R.id.btn_activity4);
+        final Button button = (Button) findViewById(R.id.btn_activity1);
+        button.setOnClickListener(this);
+        button.setEnabled(false);
 
-        for (Button b: buttons) {
-            b.setOnClickListener(this);
-        }
+        EditText edit = (EditText) findViewById(R.id.edit_txt);
+        assert edit != null;
+        edit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 0) {
+                    button.setEnabled(false);
+                    return;
+                }
+
+                button.setEnabled(true);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_activity1:
-                OneActivity.startActivity(this);
-                break;
-
-            case R.id.btn_activity2:
-                TwoActivity.startActivity(this);
-                break;
-
-            case R.id.btn_activity3:
-                ThreeActivity.startActivity(this);
-                break;
-
-            case R.id.btn_activity4:
-                FourActivity.startActivity(this);
-                break;
-        }
+        EditText edit = (EditText) findViewById(R.id.edit_txt);
+        String message = edit.getText().toString();
+        DetailActivity.startActivity(this, message);
     }
 }
