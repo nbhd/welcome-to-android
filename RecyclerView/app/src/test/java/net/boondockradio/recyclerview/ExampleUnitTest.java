@@ -1,4 +1,4 @@
-package net.boondockradio.recycleview;
+package net.boondockradio.recyclerview;
 
 import org.junit.Test;
 

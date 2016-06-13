@@ -5,7 +5,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="net.boondockradio.recycleview.MainActivity">
+    tools:context="net.boondockradio.recyclerview.MainActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_main_activity"
