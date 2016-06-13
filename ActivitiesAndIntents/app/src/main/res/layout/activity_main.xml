@@ -13,34 +13,21 @@
         android:layout_centerInParent="true"
         android:layout_alignParentTop="true"
         android:text="@string/app_name"/>
-    
+
+    <EditText
+        android:id="@+id/edit_activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_activity_main"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/main_activity_edit_text_margin"/>
+
     <Button
-        android:id="@+id/btn_activity1"
+        android:id="@+id/btn_activity_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:gravity="center"
-        android:text="@string/label_activity1"/>
-    <Button
-        android:id="@+id/btn_activity2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_below="@+id/btn_activity1"
-        android:text="@string/label_activity2"/>
-    <Button
-        android:id="@+id/btn_activity3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_below="@+id/btn_activity2"
-        android:text="@string/label_activity3"/>
-    <Button
-        android:id="@+id/btn_activity4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_below="@+id/btn_activity3"
-        android:text="@string/label_activity4"/>
+        android:text="@string/label_detail"/>
 
 </RelativeLayout>
