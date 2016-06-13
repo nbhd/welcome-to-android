@@ -10,18 +10,20 @@ import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private EditText editText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Button button = (Button) findViewById(R.id.btn_activity1);
+        final Button button = (Button) findViewById(R.id.btn_activity_main);
         button.setOnClickListener(this);
         button.setEnabled(false);
 
-        EditText edit = (EditText) findViewById(R.id.edit_txt);
-        assert edit != null;
-        edit.addTextChangedListener(new TextWatcher() {
+        editText = (EditText) findViewById(R.id.edit_activity_main);
+        assert editText != null;
+        editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -29,12 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 0) {
-                    button.setEnabled(false);
-                    return;
-                }
-
-                button.setEnabled(true);
+                boolean hasText = s.length() != 0;
+                button.setEnabled(hasText);
             }
 
             @Override
@@ -45,8 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onClick(View v) {
-        EditText edit = (EditText) findViewById(R.id.edit_txt);
-        String message = edit.getText().toString();
+        String message = editText.getText().toString();
         DetailActivity.startActivity(this, message);
     }
 }

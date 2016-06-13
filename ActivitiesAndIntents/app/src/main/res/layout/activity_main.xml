@@ -15,15 +15,15 @@
         android:text="@string/app_name"/>
 
     <EditText
-        android:id="@+id/edit_txt"
+        android:id="@+id/edit_activity_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_activity1"
+        android:layout_above="@+id/btn_activity_main"
         android:layout_centerInParent="true"
         android:layout_marginBottom="@dimen/main_activity_edit_text_margin"/>
 
     <Button
-        android:id="@+id/btn_activity1"
+        android:id="@+id/btn_activity_main"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"

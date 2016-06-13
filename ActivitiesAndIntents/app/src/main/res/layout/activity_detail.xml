@@ -7,10 +7,10 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".DetailActivity">
+    tools:context="net.boondockradio.activitiesandintents.DetailActivity">
 
     <TextView
-        android:id="@+id/txt_activity_one"
+        android:id="@+id/txt_activity_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
