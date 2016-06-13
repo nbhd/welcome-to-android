@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">RecycleView</string>
+
+    <string name="states_lover">I love %1s</string>
 </resources>
