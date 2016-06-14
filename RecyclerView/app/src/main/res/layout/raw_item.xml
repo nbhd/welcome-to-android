@@ -6,8 +6,7 @@
     <ImageView
         android:id="@+id/image_raw_item"
         android:layout_width="@dimen/states_raw_image_size"
-        android:layout_height="wrap_content"
-        android:scaleType="fitCenter"/>
+        android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/text_raw_item"
