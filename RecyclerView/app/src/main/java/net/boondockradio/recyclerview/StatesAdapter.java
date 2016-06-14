@@ -40,13 +40,7 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ItemViewHo
         final Context context = holder.itemView.getContext();
         holder.textView.setText(stateText);
 
-        TypedArray images = context
-                .getResources()
-                .obtainTypedArray(R.array.states_images);
-        holder.imageView.setImageDrawable(
-                images.getDrawable(position)
-        );
-        images.recycle();
+        holder.imageView.setImageResource(item.resId);
 
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
