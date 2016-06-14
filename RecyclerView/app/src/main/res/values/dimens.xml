@@ -3,5 +3,6 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="states_raw_image_size">100dp</dimen>
     <dimen name="states_raw_padding">8dp</dimen>
 </resources>
