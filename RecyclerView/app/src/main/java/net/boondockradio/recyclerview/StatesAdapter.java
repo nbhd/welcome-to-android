@@ -4,8 +4,9 @@ import net.boondockradio.recyclerview.dto.StateItem;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.TypedArray;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +20,11 @@ import java.util.ArrayList;
 public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ItemViewHolder> {
 
     private ArrayList<StateItem> states;
+    private StatesRemoveListener removeListener;
 
-    public StatesAdapter(ArrayList<StateItem> states) {
+    public StatesAdapter(ArrayList<StateItem> states, StatesRemoveListener removeListener) {
         this.states = states;
+        this.removeListener = removeListener;
     }
 
     @Override
@@ -33,7 +36,7 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ItemViewHo
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder holder, final int position) {
+    public void onBindViewHolder(final ItemViewHolder holder, final int position) {
         final StateItem item = states.get(position);
         String stateText = item.title;
 
@@ -45,9 +48,9 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ItemViewHo
         holder.textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int hateIndex = (position == states.size() - 1) ? 0 : position;
+                int hateIndex = (holder.getAdapterPosition() == states.size() - 1) ? 0 : holder.getAdapterPosition() + 1;
                 String message = context
-                        .getString(R.string.states_lover, states.get(position).title,
+                        .getString(R.string.states_lover, item.title,
                                 states.get(hateIndex).title);
                 Toast.makeText(
                         context,
@@ -66,6 +69,31 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ItemViewHo
                 context.startActivity(intent);
             }
         });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder
+                        .setMessage(
+                                context.getString(
+                                        R.string.dialog_remove_message,
+                                        item.title
+                                )
+                        )
+                        .setCancelable(true)
+                        .setPositiveButton(R.string.dialog_label_yes,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        removeListener.remove(holder.getAdapterPosition());
+                                    }
+                                })
+                        .create()
+                        .show();
+                return true;
+            }
+        });
     }
 
     @Override
@@ -74,6 +102,7 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ItemViewHo
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
+
         public TextView textView;
         public ImageView imageView;
 

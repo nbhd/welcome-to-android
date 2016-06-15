@@ -2,4 +2,10 @@
     <string name="app_name">RecyclerView</string>
 
     <string name="states_lover">I love %1$s, not %2$s</string>
+
+    <string name="dialog_label_yes">Yes</string>
+    <string name="dialog_label_no">No</string>
+    <string name="dialog_label_add">Add</string>
+    <string name="dialog_add_title">Add State</string>
+    <string name="dialog_remove_message">Do you want to remove the %s?</string>
 </resources>

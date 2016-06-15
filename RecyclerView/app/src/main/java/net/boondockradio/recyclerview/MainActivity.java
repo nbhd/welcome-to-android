@@ -2,14 +2,21 @@ package net.boondockradio.recyclerview;
 
 import net.boondockradio.recyclerview.dto.StateItem;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements View.OnClickListener, StatesRemoveListener {
 
     private ArrayList<StateItem> states;
     private RecyclerView recyclerView;
@@ -26,9 +33,42 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new StatesAdapter(states);
+        adapter = new StatesAdapter(states, this);
         recyclerView.setAdapter(adapter);
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.dialog_add_state, null);
+        final EditText editText = (EditText) view.findViewById(R.id.state_name);
+
+        new AlertDialog.Builder(this)
+                .setCancelable(true)
+                .setTitle(R.string.dialog_add_title)
+                .setView(view)
+                .setPositiveButton(R.string.dialog_label_add,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            states.add(0, new StateItem(editText.getText().toString(),
+                                    R.drawable.alabama));
+                            adapter.notifyItemInserted(0);
+                        }
+                    }
+                )
+                .create()
+                .show();
+    }
+
+    @Override
+    public void remove(int position) {
+        states.remove(position);
+        adapter.notifyItemRemoved(position);
     }
 
     private void createDummyData() {
