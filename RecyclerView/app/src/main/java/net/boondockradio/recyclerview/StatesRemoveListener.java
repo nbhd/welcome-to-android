@@ -1,6 +1,6 @@
 package net.boondockradio.recyclerview;
 
-public interface StatesDelegate {
+public interface StatesRemoveListener {
 
     public void remove(int position);
 }
