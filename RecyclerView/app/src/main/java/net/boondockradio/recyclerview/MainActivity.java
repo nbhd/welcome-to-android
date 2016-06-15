@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
 
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_add_state, null);
-        final EditText editText = (EditText) view.findViewById(R.id.stateName);
+        final EditText editText = (EditText) view.findViewById(R.id.state_name);
 
         new AlertDialog.Builder(this)
                 .setCancelable(true)
