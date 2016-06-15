@@ -106,11 +106,9 @@ public class StatesAdapter extends RecyclerView.Adapter<StatesAdapter.ItemViewHo
 
         public TextView textView;
         public ImageView imageView;
-        public View itemView;
 
         public ItemViewHolder(View v) {
             super(v);
-            itemView = v;
             textView = (TextView) v.findViewById(R.id.text_raw_item);
             imageView = (ImageView) v.findViewById(R.id.image_raw_item);
         }
