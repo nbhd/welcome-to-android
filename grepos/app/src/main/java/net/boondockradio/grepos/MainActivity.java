@@ -2,8 +2,8 @@ package net.boondockradio.grepos;
 
 import net.boondockradio.grepos.adapter.RepositoryAdpter;
 import net.boondockradio.grepos.api.GithubApi;
-import net.boondockradio.grepos.dto.Item;
 import net.boondockradio.grepos.dto.Repository;
+import net.boondockradio.grepos.dto.Repositories;
 import net.boondockradio.grepos.service.ApiClient;
 
 import android.os.Bundle;
@@ -14,20 +14,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = "grepos";
 
-    private List<Item> mItems;
+    private List<Repository> mRepositoryItems;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -41,22 +38,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchRepositories() {
         GithubApi api = ApiClient.getClient().create(GithubApi.class);
-        Call<Repository> call = api.getRepositories("language:java", "Repositories", "100");
+        Call<Repositories> call = api.getRepositories("language:java", "Repositories", "100");
 
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_main_activity);
         progress.setVisibility(View.VISIBLE);
 
-        call.enqueue(new Callback<Repository>() {
+        call.enqueue(new Callback<Repositories>() {
             @Override
-            public void onResponse(Call<Repository> call, Response<Repository> response) {
+            public void onResponse(Call<Repositories> call, Response<Repositories> response) {
                 Log.d(TAG, "success");
-                mItems = response.body().getItems();
+                mRepositoryItems = response.body().items;
                 showRepositories();
                 progress.setVisibility(View.GONE);
             }
 
             @Override
-            public void onFailure(Call<Repository> call, Throwable t) {
+            public void onFailure(Call<Repositories> call, Throwable t) {
                 Log.d(TAG, "failure");
                 progress.setVisibility(View.GONE);
             }
@@ -68,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        mAdapter = new RepositoryAdpter(mItems);
+        mAdapter = new RepositoryAdpter(mRepositoryItems);
 
         mRecyclerView.setAdapter(mAdapter);
     }

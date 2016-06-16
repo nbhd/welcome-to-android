@@ -1,6 +1,6 @@
 package net.boondockradio.grepos.api;
 
-import net.boondockradio.grepos.dto.Repository;
+import net.boondockradio.grepos.dto.Repositories;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -10,7 +10,7 @@ import retrofit2.http.Query;
 
 public interface GithubApi {
     @GET("/search/repositories")
-    Call<Repository> getRepositories(
+    Call<Repositories> getRepositories(
             @Query("q") String q,
             @Query("type") String type,
             @Query("per_page") String per_page
