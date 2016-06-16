@@ -11,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,17 +42,23 @@ public class MainActivity extends AppCompatActivity {
     private void fetchRepositories() {
         GithubApi api = ApiClient.getClient().create(GithubApi.class);
         Call<Repository> call = api.getRepositories("language:java", "Repositories", "100");
+
+        final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_main_activity);
+        progress.setVisibility(View.VISIBLE);
+
         call.enqueue(new Callback<Repository>() {
             @Override
             public void onResponse(Call<Repository> call, Response<Repository> response) {
                 Log.d(TAG, "success");
                 mItems = response.body().getItems();
                 showRepositories();
+                progress.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<Repository> call, Throwable t) {
                 Log.d(TAG, "failure");
+                progress.setVisibility(View.GONE);
             }
         });
     }
