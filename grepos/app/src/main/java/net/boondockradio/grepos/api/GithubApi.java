@@ -12,6 +12,7 @@ public interface GithubApi {
     @GET("/search/repositories")
     Call<Repository> getRepositories(
             @Query("q") String q,
-            @Query("type") String type
+            @Query("type") String type,
+            @Query("per_page") String per_page
     );
 }
