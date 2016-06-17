@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -26,30 +27,48 @@ public class MainActivity extends AppCompatActivity {
 
     private List<Repository> mRepositoryItems;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private LinearLayoutManager mLayoutManager;
+    private RepositoryAdpter mAdapter;
+
+    private int mPage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mRepositoryItems = new ArrayList<>();
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_main_activity);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
         fetchRepositories();
     }
 
     private void fetchRepositories() {
         GithubApi api = ApiClient.getClient().create(GithubApi.class);
-        Call<Repositories> call = api.getRepositories("language:java", "Repositories", "100");
+        Call<Repositories> call = api.getRepositories("language:java", "Repositories", ++mPage + "", "100");
 
         final ProgressBar progress = (ProgressBar) findViewById(R.id.progress_main_activity);
-        progress.setVisibility(View.VISIBLE);
+
+        mRepositoryItems.add(null);
+        if (mRepositoryItems.size() > 1) {
+            mAdapter.notifyItemInserted(mRepositoryItems.size() - 1);
+        }
 
         call.enqueue(new Callback<Repositories>() {
             @Override
             public void onResponse(Call<Repositories> call, Response<Repositories> response) {
                 Log.d(TAG, "success");
-                mRepositoryItems = response.body().items;
+                mRepositoryItems.remove(mRepositoryItems.size() - 1);
+
+                mRepositoryItems.addAll(response.body().items);
                 showRepositories();
                 progress.setVisibility(View.GONE);
+
+                mAdapter.setIsLoading(false);
             }
 
             @Override
@@ -61,12 +80,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showRepositories() {
-        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_main_activity);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        if (mAdapter == null) {
+            mAdapter = new RepositoryAdpter(mRepositoryItems, mRecyclerView);
+            mAdapter.setOnLoadMoreListener(new RepositoryAdpter.OnLoadMoreListener() {
+                @Override
+                public void onLoadMore() {
+                    fetchRepositories();
+                }
+            });
 
-        mAdapter = new RepositoryAdpter(mRepositoryItems);
+            mRecyclerView.setAdapter(mAdapter);
+            return;
+        }
 
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
     }
 }
