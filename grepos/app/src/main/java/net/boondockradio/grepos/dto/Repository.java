@@ -14,7 +14,7 @@ public class Repository {
     @SerializedName("owner")
     public Owner owner;
     @SerializedName("private")
-    public boolean _private;
+    public boolean isPrivate;
     @SerializedName("html_url")
     public String htmlUrl;
     @SerializedName("description")
