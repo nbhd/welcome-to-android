@@ -2,8 +2,8 @@ package net.boondockradio.grepos;
 
 import net.boondockradio.grepos.adapter.RepositoryAdpter;
 import net.boondockradio.grepos.api.GithubApi;
-import net.boondockradio.grepos.dto.Repository;
 import net.boondockradio.grepos.dto.Repositories;
+import net.boondockradio.grepos.dto.Repository;
 import net.boondockradio.grepos.service.ApiClient;
 
 import android.os.Bundle;
