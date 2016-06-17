@@ -5,23 +5,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class Repository {
 
-    @SerializedName("id")
     public int id;
-    @SerializedName("name")
     public String name;
     @SerializedName("full_name")
     public String fullName;
-    @SerializedName("owner")
     public Owner owner;
     @SerializedName("private")
     public boolean isPrivate;
     @SerializedName("html_url")
     public String htmlUrl;
-    @SerializedName("description")
     public String description;
-    @SerializedName("fork")
     public boolean fork;
-    @SerializedName("url")
     public String url;
     @SerializedName("forks_url")
     public String forksUrl;
@@ -109,7 +103,6 @@ public class Repository {
     public String cloneUrl;
     @SerializedName("svn_url")
     public String svnUrl;
-    @SerializedName("homepage")
     public String homepage;
     @SerializedName("size")
     public int size;
@@ -117,7 +110,6 @@ public class Repository {
     public int stargazersCount;
     @SerializedName("watchers_count")
     public int watchersCount;
-    @SerializedName("language")
     public String language;
     @SerializedName("has_issues")
     public boolean hasIssues;
@@ -137,10 +129,8 @@ public class Repository {
     public int forks;
     @SerializedName("open_issues")
     public int openIssues;
-    @SerializedName("watchers")
     public int watchers;
     @SerializedName("default_branch")
     public String defaultBranch;
-    @SerializedName("score")
     public double score;
 }

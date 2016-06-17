@@ -5,9 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class Owner {
 
-    @SerializedName("login")
     public String login;
-    @SerializedName("id")
     public int id;
     @SerializedName("avatar_url")
     public String avatarUrl;
@@ -35,7 +33,6 @@ public class Owner {
     public String eventsUrl;
     @SerializedName("received_events_url")
     public String receivedEventsUrl;
-    @SerializedName("type")
     public String type;
     @SerializedName("site_admin")
     public boolean siteAdmin;

@@ -12,7 +12,6 @@ public class Repositories {
     public int totalCount;
     @SerializedName("incomplete_results")
     public boolean incompleteResults;
-    @SerializedName("items")
     public List<Repository> items = new ArrayList<Repository>();
 
 }
