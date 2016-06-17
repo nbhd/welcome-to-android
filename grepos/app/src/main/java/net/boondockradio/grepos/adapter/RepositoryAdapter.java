@@ -3,7 +3,6 @@ package net.boondockradio.grepos.adapter;
 import net.boondockradio.grepos.R;
 import net.boondockradio.grepos.dto.Repository;
 
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,41 +12,15 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class RepositoryAdpter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROGRESS = 0;
 
-    private final int LOAD_MORE_THRESHOLD = 2;
-
+    private boolean mIsLoading;
     private List<Repository> mRepositoryItems;
-    private RecyclerView mRecyclerView;
 
-    private OnLoadMoreListener onLoadMoreListener;
-    private int total = 0;
-    private int last = 0;
-    private boolean isLoading = false;
-
-    public RepositoryAdpter(List<Repository> repositoryItems, RecyclerView recyclerView) {
+    public RepositoryAdapter(List<Repository> repositoryItems) {
         mRepositoryItems = repositoryItems;
-        mRecyclerView = recyclerView;
-
-        final LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                total = layoutManager.getItemCount();
-                last = layoutManager.findLastVisibleItemPosition();
-
-                if (dy < 0) {
-                    return;
-                }
-
-                if (!isLoading && last + LOAD_MORE_THRESHOLD >= total) {
-                    onLoadMoreListener.onLoadMore();
-                    isLoading = true;
-                }
-            }
-        });
     }
 
     @Override
@@ -75,6 +48,10 @@ public class RepositoryAdpter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (position >= mRepositoryItems.size()) {
+            return;
+        }
+
         Repository item = mRepositoryItems.get(position);
         if (holder instanceof ItemViewHolder) {
             ((ItemViewHolder) holder).textView.setText(item.fullName);
@@ -83,20 +60,27 @@ public class RepositoryAdpter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        return mRepositoryItems.get(position) != null ? VIEW_ITEM : VIEW_PROGRESS;
+        return position == mRepositoryItems.size() ? VIEW_PROGRESS : VIEW_ITEM;
     }
 
     @Override
     public int getItemCount() {
-        return mRepositoryItems.size();
+        int loading = mIsLoading ? 1 : 0;
+        return mRepositoryItems.size() + loading;
     }
 
-    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
-        this.onLoadMoreListener = onLoadMoreListener;
+    public void add(List<Repository> repositories) {
+        mRepositoryItems.addAll(repositories);
+        notifyItemRangeChanged(mRepositoryItems.size() - repositories.size(), repositories.size());
     }
 
     public void setIsLoading(boolean isLoading) {
-        this.isLoading = isLoading;
+        mIsLoading = isLoading;
+        if (mIsLoading) {
+            notifyItemInserted(mRepositoryItems.size());
+        } else {
+            notifyItemRemoved(mRepositoryItems.size());
+        }
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -115,9 +99,5 @@ public class RepositoryAdpter extends RecyclerView.Adapter<RecyclerView.ViewHold
             super(v);
             progressBar = (ProgressBar) v.findViewById(R.id.progress_row);
         }
-    }
-
-    public interface OnLoadMoreListener {
-        void onLoadMore();
     }
 }
