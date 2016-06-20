@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
                 int last = layoutManager.findLastVisibleItemPosition();
 
                 if (!isLoading && last + LOAD_MORE_THRESHOLD >= mTotal) {
-                    last = mTotal;
                     fetchRepositories();
                     mAdapter.setIsLoading(true);
                     isLoading = true;
