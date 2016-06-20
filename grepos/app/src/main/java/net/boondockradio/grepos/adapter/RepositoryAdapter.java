@@ -13,8 +13,32 @@ import android.widget.TextView;
 import java.util.List;
 
 public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final int VIEW_ITEM = 1;
-    private final int VIEW_PROGRESS = 0;
+    private enum  ViewType {
+        Progress(0),
+        Item(1);
+
+        private int type;
+
+        private ViewType(int type) {
+            this.type = type;
+        }
+
+        public int toValue() {
+            return type;
+        }
+
+        public static ViewType fromValue(int type) {
+            ViewType result = Progress;
+
+            for (ViewType vt: values()) {
+                if (vt.toValue() == type) {
+                    result = vt;
+                    break;
+                }
+            }
+            return result;
+        }
+    };
 
     private boolean mIsLoading;
     private List<Repository> mRepositoryItems;
@@ -27,20 +51,18 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh;
         View v;
+        ViewType vt = ViewType.fromValue(viewType);
 
-        switch (viewType) {
-            case VIEW_ITEM:
-                v = LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(R.layout.row_item, parent, false);
-                vh = new ItemViewHolder(v);
-                break;
-
-            default:
-                v = LayoutInflater
-                        .from(parent.getContext())
-                        .inflate(R.layout.row_progress, parent, false);
-                vh = new ProgressViewHolder(v);
+        if (vt == ViewType.Item) {
+            v = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.row_item, parent, false);
+            vh = new ItemViewHolder(v);
+        } else {
+            v = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.row_progress, parent, false);
+            vh = new ProgressViewHolder(v);
         }
 
         return vh;
@@ -60,7 +82,7 @@ public class RepositoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     @Override
     public int getItemViewType(int position) {
-        return position == mRepositoryItems.size() ? VIEW_PROGRESS : VIEW_ITEM;
+        return position == mRepositoryItems.size() ? ViewType.Progress.toValue() : ViewType.Item.toValue();
     }
 
     @Override

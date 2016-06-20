@@ -25,16 +25,14 @@ public class MainActivity extends AppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
     private final int LOAD_MORE_THRESHOLD = 1;
-    private final String PER_PAGE = "50";
+    private static final String PER_PAGE = "50";
 
-    private List<Repository> mRepositoryItems;
     private RepositoryAdapter mAdapter;
     private ProgressBar mProgress;
 
     private int mPage = 0;
 
-    private int total = 0;
-    private int last = 0;
+    private int mTotal = 0;
     private boolean isLoading = false;
 
     @Override
@@ -43,25 +41,25 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mProgress = (ProgressBar) findViewById(R.id.progress_main_activity);
-        mRepositoryItems = new ArrayList<>();
+        final List<Repository> repositoryItems = new ArrayList<>();
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_main_activity);
         recyclerView.setHasFixedSize(true);
 
         final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(layoutManager);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                total = layoutManager.getItemCount();
-                last = layoutManager.findLastVisibleItemPosition();
-
                 if (dy < 0) {
                     return;
                 }
 
-                if (!isLoading && last + LOAD_MORE_THRESHOLD >= total) {
+                int last = layoutManager.findLastVisibleItemPosition();
+
+                if (!isLoading && last + LOAD_MORE_THRESHOLD >= mTotal) {
+                    last = mTotal;
                     fetchRepositories();
                     mAdapter.setIsLoading(true);
                     isLoading = true;
@@ -69,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mAdapter = new RepositoryAdapter(mRepositoryItems);
+        mAdapter = new RepositoryAdapter(repositoryItems);
         recyclerView.setAdapter(mAdapter);
 
         fetchRepositories();
@@ -88,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 mAdapter.add(response.body().items);
                 mAdapter.setIsLoading(false);
                 isLoading = false;
+                mTotal = mAdapter.getItemCount();
             }
 
             @Override
