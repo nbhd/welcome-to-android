@@ -17,9 +17,9 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -74,25 +74,38 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchRepositories() {
         GithubApi api = ApiClient.getClient().create(GithubApi.class);
-        Call<Repositories> call = api.getRepositories("language:java", "Repositories", ++mPage + "", PER_PAGE);
 
-        call.enqueue(new Callback<Repositories>() {
-            @Override
-            public void onResponse(Call<Repositories> call, Response<Repositories> response) {
-                Log.d(TAG, "success");
-                mProgress.setVisibility(View.GONE);
+        api
+                .getRepositories(
+                        "language:java",
+                        "Repositories",
+                        ++mPage + "",
+                        PER_PAGE
+                )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Repositories>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d(TAG, "onCompleted");
+                    }
 
-                mAdapter.add(response.body().items);
-                mAdapter.setIsLoading(false);
-                isLoading = false;
-                mTotal = mAdapter.getItemCount();
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError");
+                    }
 
-            @Override
-            public void onFailure(Call<Repositories> call, Throwable t) {
-                Log.d(TAG, "failure");
-                mProgress.setVisibility(View.GONE);
-            }
-        });
+                    @Override
+                    public void onNext(Repositories repositories) {
+                        Log.d(TAG, "onNext");
+                        mProgress.setVisibility(View.GONE);
+
+                        mAdapter.add(repositories.items);
+                        mAdapter.setIsLoading(false);
+                        isLoading = false;
+                        mTotal = mAdapter.getItemCount();
+                    }
+                });
+
     }
 }
