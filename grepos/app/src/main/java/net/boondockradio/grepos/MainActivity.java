@@ -18,8 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,8 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private RepositoryAdapter mAdapter;
     private ProgressBar mProgress;
 
-    private int mPage = 0;
+    private CompositeSubscription mCompositeSubscription;
 
+    private int mPage = 0;
     private int mTotal = 0;
     private boolean isLoading = false;
 
@@ -39,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mCompositeSubscription = new CompositeSubscription();
 
         mProgress = (ProgressBar) findViewById(R.id.progress_main_activity);
         final List<Repository> repositoryItems = new ArrayList<>();
@@ -72,10 +77,16 @@ public class MainActivity extends AppCompatActivity {
         fetchRepositories();
     }
 
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        mCompositeSubscription.unsubscribe();
+    }
+
     private void fetchRepositories() {
         GithubApi api = ApiClient.getClient().create(GithubApi.class);
 
-        api
+        Subscription subscription = api
                 .getRepositories(
                         "language:java",
                         "Repositories",
@@ -106,6 +117,6 @@ public class MainActivity extends AppCompatActivity {
                         mTotal = mAdapter.getItemCount();
                     }
                 });
-
+        mCompositeSubscription.add(subscription);
     }
 }
