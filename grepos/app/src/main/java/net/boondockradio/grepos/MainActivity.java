@@ -2,6 +2,7 @@ package net.boondockradio.grepos;
 
 import net.boondockradio.grepos.adapter.RepositoryAdapter;
 import net.boondockradio.grepos.api.GithubApi;
+import net.boondockradio.grepos.dao.GithubDao;
 import net.boondockradio.grepos.dto.Repositories;
 import net.boondockradio.grepos.dto.Repository;
 import net.boondockradio.grepos.service.ApiClient;
@@ -19,15 +20,13 @@ import java.util.List;
 
 import rx.Observer;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
     private final int LOAD_MORE_THRESHOLD = 1;
-    private static final String PER_PAGE = "50";
+    private static final int PER_PAGE = 100;
 
     private RepositoryAdapter mAdapter;
     private ProgressBar mProgress;
@@ -37,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
     private int mPage = 0;
     private int mTotal = 0;
     private boolean isLoading = false;
+
+    private GithubDao mGithubDao = new GithubDao(
+            ApiClient.getClient().create(GithubApi.class)
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,23 +81,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
         mCompositeSubscription.unsubscribe();
     }
 
     private void fetchRepositories() {
-        GithubApi api = ApiClient.getClient().create(GithubApi.class);
 
-        Subscription subscription = api
+        Subscription subscription = mGithubDao
                 .getRepositories(
                         "language:java",
                         "Repositories",
-                        ++mPage + "",
+                        ++mPage,
                         PER_PAGE
                 )
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Repositories>() {
                     @Override
                     public void onCompleted() {
