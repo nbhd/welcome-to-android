@@ -94,20 +94,28 @@ public class MainActivity extends AppCompatActivity {
                         PER_PAGE
                 )
                 .subscribe(
-                        repositories -> {
-                            Log.d(TAG, "onNext");
-                            mProgress.setVisibility(View.GONE);
-
-                            mAdapter.add(repositories.items);
-                            mAdapter.setIsLoading(false);
-                            isLoading = false;
-                            mTotal = mAdapter.getItemCount();
-                        }, err -> {
-                            Log.d(TAG, "onError");
-                        }, () -> {
-                            Log.d(TAG, "onCompleted");
-                        }
+                        this::handleResponse,
+                        this::handleError,
+                        this::handleComplete
                 );
         mCompositeSubscription.add(subscription);
+    }
+
+    private void handleResponse(Repositories repositories) {
+        Log.d(TAG, "onNext");
+        mProgress.setVisibility(View.GONE);
+
+        mAdapter.add(repositories.items);
+        mAdapter.setIsLoading(false);
+        isLoading = false;
+        mTotal = mAdapter.getItemCount();
+    }
+
+    private void handleError(Throwable throwalbe) {
+        Log.d(TAG, throwalbe.getMessage());
+    }
+
+    private void handleComplete() {
+        Log.d(TAG, "onCompleted");
     }
 }
