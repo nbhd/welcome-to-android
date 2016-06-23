@@ -2,6 +2,7 @@ package net.boondockradio.grepos;
 
 import net.boondockradio.grepos.adapter.RepositoryAdapter;
 import net.boondockradio.grepos.api.GithubApi;
+import net.boondockradio.grepos.dao.GithubDao;
 import net.boondockradio.grepos.dto.Repositories;
 import net.boondockradio.grepos.dto.Repository;
 import net.boondockradio.grepos.service.ApiClient;
@@ -17,28 +18,33 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import rx.Observer;
+import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends AppCompatActivity {
 
     private final String TAG = MainActivity.class.getSimpleName();
     private final int LOAD_MORE_THRESHOLD = 1;
-    private static final String PER_PAGE = "50";
+    private static final int PER_PAGE = 100;
 
     private RepositoryAdapter mAdapter;
     private ProgressBar mProgress;
 
-    private int mPage = 0;
+    private CompositeSubscription mCompositeSubscription;
 
+    private int mPage = 0;
     private int mTotal = 0;
     private boolean isLoading = false;
+
+    private GithubDao mGithubDao = new GithubDao();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mCompositeSubscription = new CompositeSubscription();
 
         mProgress = (ProgressBar) findViewById(R.id.progress_main_activity);
         final List<Repository> repositoryItems = new ArrayList<>();
@@ -72,27 +78,43 @@ public class MainActivity extends AppCompatActivity {
         fetchRepositories();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCompositeSubscription.unsubscribe();
+    }
+
     private void fetchRepositories() {
-        GithubApi api = ApiClient.getClient().create(GithubApi.class);
-        Call<Repositories> call = api.getRepositories("language:java", "Repositories", ++mPage + "", PER_PAGE);
 
-        call.enqueue(new Callback<Repositories>() {
-            @Override
-            public void onResponse(Call<Repositories> call, Response<Repositories> response) {
-                Log.d(TAG, "success");
-                mProgress.setVisibility(View.GONE);
+        Subscription subscription = mGithubDao
+                .getRepositories(
+                        "language:java",
+                        "Repositories",
+                        ++mPage,
+                        PER_PAGE
+                )
+                .subscribe(new Observer<Repositories>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d(TAG, "onCompleted");
+                    }
 
-                mAdapter.add(response.body().items);
-                mAdapter.setIsLoading(false);
-                isLoading = false;
-                mTotal = mAdapter.getItemCount();
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError");
+                    }
 
-            @Override
-            public void onFailure(Call<Repositories> call, Throwable t) {
-                Log.d(TAG, "failure");
-                mProgress.setVisibility(View.GONE);
-            }
-        });
+                    @Override
+                    public void onNext(Repositories repositories) {
+                        Log.d(TAG, "onNext");
+                        mProgress.setVisibility(View.GONE);
+
+                        mAdapter.add(repositories.items);
+                        mAdapter.setIsLoading(false);
+                        isLoading = false;
+                        mTotal = mAdapter.getItemCount();
+                    }
+                });
+        mCompositeSubscription.add(subscription);
     }
 }
