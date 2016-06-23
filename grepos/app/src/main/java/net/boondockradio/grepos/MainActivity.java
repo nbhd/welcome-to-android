@@ -37,9 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private int mTotal = 0;
     private boolean isLoading = false;
 
-    private GithubDao mGithubDao = new GithubDao(
-            ApiClient.getClient().create(GithubApi.class)
-    );
+    private GithubDao mGithubDao = new GithubDao();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
